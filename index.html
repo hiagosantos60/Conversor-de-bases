@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Conversor Decimal ↔ Binário (Unsigned / 2's complement)</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="container">
+    <h1>Conversor Decimal ↔ Binário</h1>
+
+    <section class="controls">
+      <label for="bitsInput"><strong>Nº de bits</strong></label>
+      <div class="bits-row">
+        <select id="presetBits" aria-label="Preset de bits">
+          <option value="8">8 bits</option>
+          <option value="16" selected>16 bits</option>
+          <option value="32">32 bits</option>
+          <option value="64">64 bits</option>
+          <option value="custom">Custom</option>
+        </select>
+
+        <input id="bitsInput" type="number" min="1" max="1024" value="16" aria-label="Número de bits" />
+      </div>
+      <p id="rangeInfo" class="help"></p>
+    </section>
+
+    <section class="panel">
+      <h2>Decimal → Binário</h2>
+      <label>Decimal (ex.: +355, -675, 355)</label>
+      <input id="decimalInput" type="text" placeholder="Ex: -355 ou +355" />
+
+      <label>Tipo</label>
+      <select id="decimalMode">
+        <option value="unsigned">Unsigned (sem sinal)</option>
+        <option value="signed" selected>Signed (complemento de 2)</option>
+      </select>
+
+      <div class="buttons">
+        <button id="decToBinBtn">Converter →</button>
+        <button id="decCopyBtn" class="secondary">Copiar binário</button>
+      </div>
+
+      <div class="result">
+        <label>Binário (preenchido até bits):</label>
+        <pre id="resultadoDecimal" class="output">—</pre>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Binário → Decimal</h2>
+      <label>Binário (apenas 0/1)</label>
+      <input id="binarioInput" type="text" placeholder="Ex: 101100011" />
+
+      <label>Tipo</label>
+      <select id="binarioMode">
+        <option value="unsigned">Unsigned (sem sinal)</option>
+        <option value="signed" selected>Signed (complemento de 2)</option>
+      </select>
+
+      <div class="buttons">
+        <button id="binToDecBtn">Converter →</button>
+        <button id="binCopyBtn" class="secondary">Copiar decimal</button>
+      </div>
+
+      <div class="result">
+        <label>Decimal:</label>
+        <pre id="resultadoBinario" class="output">—</pre>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>Observações: usa <code>BigInt</code>. Limite de bits: <strong>1–1024</strong>. Navegadores modernos suportam BigInt.</p>
+      <p>Exemplos rápidos:
+        <ul>
+          <li>Decimal <code>355</code>, 16 bits → <code>0000000101100011</code></li>
+          <li>Decimal <code>-355</code>, 16 bits (2's complement) → <code>1111111010011101</code></li>
+          <li>Binário <code>1111111010011101</code>, 16 bits, signed → <code>-355</code></li>
+        </ul>
+      </p>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
