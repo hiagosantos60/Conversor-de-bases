@@ -31,16 +31,18 @@ h1 {
   color: #2f3640;
 }
 
-h2 {
+.panel {
+  margin-bottom: 30px;
+  padding: 20px;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.panel h2 {
   color: #2f3640;
   margin-bottom: 10px;
   border-bottom: 2px solid #dcdde1;
   padding-bottom: 5px;
-}
-
-.controls,
-.panel {
-  margin-bottom: 30px;
 }
 
 label {
@@ -68,13 +70,26 @@ select:focus {
   outline: none;
 }
 
-.bits-row {
+.row-controls {
   display: flex;
-  gap: 10px;
+  gap: 1rem;
+  margin: 1rem 0;
+  align-items: flex-end;
 }
 
-.bits-row input {
+.bits-control, .mode-control {
+  display: flex;
+  flex-direction: column;
   flex: 1;
+}
+
+.bits-row input,
+.bits-control input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 16px;
 }
 
 .buttons {
@@ -130,11 +145,6 @@ button:active {
   color: #2f3640;
 }
 
-.help {
-  font-size: 14px;
-  color: #718093;
-}
-
 .footer {
   text-align: center;
   font-size: 14px;
@@ -142,14 +152,3 @@ button:active {
   margin-top: 30px;
 }
 
-.footer ul {
-  margin-top: 5px;
-  list-style: disc;
-  padding-left: 20px;
-}
-
-.footer code {
-  background-color: #dcdde1;
-  padding: 2px 5px;
-  border-radius: 4px;
-}
