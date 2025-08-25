@@ -152,3 +152,30 @@ button:active {
   margin-top: 30px;
 }
 
+.footer {
+  text-align: center;
+  font-size: 14px;
+  color: #718093;
+  margin-top: 30px;
+  padding: 15px 10px;
+  background-color: #f0f0f0;
+  border-top: 2px solid #dcdde1;
+  border-radius: 0 0 12px 12px;
+}
+
+.footer .assinatura {
+  font-weight: bold;
+  font-size: 16px;
+  color: #2a9d8f;
+  margin-top: 8px;
+}
+
+.footer .assinatura a {
+  text-decoration: none;
+  color: #e76f51;
+  transition: color 0.3s;
+}
+
+.footer .assinatura a:hover {
+  color: #264653;
+}
