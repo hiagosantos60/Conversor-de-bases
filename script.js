@@ -21,39 +21,94 @@ bitsDecimal.addEventListener('input', () => {
   bitsDecimal.value = v;
 });
 
+// ===== Funções auxiliares =====
+
 // Decimal -> Binário
-decToBinBtn.addEventListener('click', () => {
-  const bits = parseInt(bitsDecimal.value,10);
-  const mode = decimalMode.value;
-  let value;
-  try { value = BigInt(decimalInput.value); }
-  catch { resultadoDecimal.textContent = 'Erro: entrada inválida'; return; }
-
-  try {
-    resultadoDecimal.textContent = decimalToBinary(value, bits, mode==='signed');
-  } catch(err){
-    resultadoDecimal.textContent = 'Erro: '+err.message;
-  }
-});
-
-function decimalToBinary(valueBigInt, bits, signed){
+function decimalToBinary(valueBigInt, bits, signed) {
   const n = BigInt(bits);
-  if(!signed){
-    if(valueBigInt < 0n) throw new Error('Valor negativo não permitido em unsigned.');
-    if(valueBigInt > (1n<<n)-1n) throw new Error(`Overflow unsigned (${bits} bits).`);
-    return valueBigInt.toString(2).padStart(bits,'0');
+
+  if (!signed) {
+    // UNSIGNED
+    if (valueBigInt < 0n) throw new Error('Valor negativo não permitido em unsigned.');
+    if (valueBigInt > (1n << n) - 1n) throw new Error(`Overflow unsigned (${bits} bits).`);
+    return valueBigInt.toString(2).padStart(bits, '0');
   } else {
-    const min = -(1n << (n-1n));
-    const max = (1n << (n-1n))-1n;
-    if(valueBigInt < min || valueBigInt > max) throw new Error(`Overflow signed (${bits} bits).`);
-    if(valueBigInt>=0n) return valueBigInt.toString(2).padStart(bits,'0');
-    return ((1n<<n)+valueBigInt).toString(2).padStart(bits,'0');
+    // SIGNED (complemento de dois)
+    const min = -(1n << (n - 1n));
+    const max = (1n << (n - 1n)) - 1n;
+    if (valueBigInt < min || valueBigInt > max) throw new Error(`Overflow signed (${bits} bits).`);
+
+    let bin;
+    if (valueBigInt >= 0n) {
+      bin = valueBigInt.toString(2);
+    } else {
+      bin = ((1n << n) + valueBigInt).toString(2); // complemento de 2
+    }
+    // Garante exatamente N bits
+    return bin.padStart(bits, '0').slice(-bits);
   }
 }
 
+// (ASSINADO) Faz padding com extensão de sinal (preenche com MSB)
+function padSigned(bin, bits) {
+  if (bin.length >= bits) return bin;
+  const msb = bin[0] ?? '0';
+  const fill = msb === '1' ? '1' : '0';
+  return bin.padStart(bits, fill);
+}
+
+// Binário -> Decimal
+function binaryToDecimal(bin, bits, signed) {
+  let padded;
+  if (signed) {
+    // EXTENSÃO DE SINAL em modo signed
+    padded = padSigned(bin, bits);
+  } else {
+    // Zero-padding em unsigned
+    padded = bin.padStart(bits, '0');
+  }
+
+  const raw = BigInt('0b' + padded);
+
+  if (!signed) {
+    return raw;
+  } else {
+    const n = BigInt(bits);
+    // Se bit de sinal (MSB) for 0 → não-negativo
+    if (padded[0] === '0') {
+      return raw;
+    } else {
+      // Negativo em complemento de 2
+      return raw - (1n << n);
+    }
+  }
+}
+
+// ===== Botões e handlers =====
+
+// Botão Decimal -> Binário
+decToBinBtn.addEventListener('click', () => {
+  const bits = parseInt(bitsDecimal.value, 10);
+  const mode = decimalMode.value;
+  let value;
+  try { 
+    value = BigInt(decimalInput.value); 
+  }
+  catch {
+    resultadoDecimal.textContent = 'Erro: entrada inválida'; 
+    return; 
+  }
+
+  try {
+    resultadoDecimal.textContent = decimalToBinary(value, bits, mode === 'signed');
+  } catch (err) {
+    resultadoDecimal.textContent = 'Erro: ' + err.message;
+  }
+});
+
 // Copiar decimal -> binário
 decCopyBtn.addEventListener('click', () => {
-  if(resultadoDecimal.textContent==='—') return;
+  if (resultadoDecimal.textContent === '—') return;
   navigator.clipboard.writeText(resultadoDecimal.textContent);
 });
 
@@ -78,31 +133,31 @@ bitsBinario.addEventListener('input', () => {
   bitsBinario.value = v;
 });
 
-// Binário -> Decimal
+// Botão Binário -> Decimal
 binToDecBtn.addEventListener('click', () => {
-  const bits = parseInt(bitsBinario.value,10);
+  const bits = parseInt(bitsBinario.value, 10);
   const mode = binarioMode.value;
-  const bin = binarioInput.value.replace(/\s+/g,'').trim();
-  if(!/^[01]*$/.test(bin) || bin.length===0){ resultadoBinario.textContent='Erro: insira apenas 0 e 1'; return;}
-  if(bin.length>bits){ resultadoBinario.textContent=`Erro: binário maior que bits (${bits})`; return;}
+  const bin = binarioInput.value.replace(/\s+/g, '').trim();
 
-  const padded = bin.padStart(bits,'0');
-  let decimal;
-  try{
-    if(mode==='unsigned') decimal = BigInt('0b'+padded);
-    else {
-      const raw = BigInt('0b'+padded);
-      decimal = padded[0]==='0' ? raw : raw - (1n<<BigInt(bits));
-    }
+  if (!/^[01]*$/.test(bin) || bin.length === 0) { 
+    resultadoBinario.textContent = 'Erro: insira apenas 0 e 1'; 
+    return; 
+  }
+  if (bin.length > bits) { 
+    resultadoBinario.textContent = `Erro: binário maior que bits (${bits})`; 
+    return; 
+  }
+
+  try {
+    const decimal = binaryToDecimal(bin, bits, mode === 'signed');
     resultadoBinario.textContent = decimal.toString();
-  }catch{
-    resultadoBinario.textContent='Erro na conversão';
+  } catch {
+    resultadoBinario.textContent = 'Erro na conversão';
   }
 });
 
 // Copiar binário -> decimal
 binCopyBtn.addEventListener('click', () => {
-  if(resultadoBinario.textContent==='—') return;
+  if (resultadoBinario.textContent === '—') return;
   navigator.clipboard.writeText(resultadoBinario.textContent);
 });
-
