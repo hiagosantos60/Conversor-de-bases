@@ -3,98 +3,100 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Conversor Decimal ↔ Binário</title>
+  <title>Conversor de Bases e Representações</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <main class="container">
-    <h1>Conversor Decimal ↔ Binário</h1>
+    <h1>Conversor de Bases e Representações</h1>
 
-    <!-- Decimal -> Binário -->
     <section class="panel">
-      <h2>Decimal → Binário</h2>
-      <label>Decimal (ex.: +355, -675, 355)</label>
-      <input id="decimalInput" type="text" placeholder="Ex: -355 ou 355" />
+      <h2>Configuração de Conversão</h2>
 
       <div class="row-controls">
         <div class="bits-control">
-          <label for="bitsDecimal"><strong>Nº de bits</strong></label>
-          <select id="presetBitsDecimal">
+          <label for="baseEntrada">Base de Entrada</label>
+          <select id="baseEntrada">
+            <option value="dec" selected>Decimal</option>
+            <option value="bin">Binário</option>
+            <option value="hex">Hexadecimal</option>
+            <option value="oct">Octal</option>
+          </select>
+        </div>
+        <div class="bits-control">
+          <label for="baseSaida">Base de Saída</label>
+          <select id="baseSaida">
+            <option value="dec">Decimal</option>
+            <option value="bin">Binário</option>
+            <option value="hex">Hexadecimal</option>
+            <option value="oct">Octal</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row-controls" id="linhaReps">
+        <div class="mode-control" id="blocoRepEntrada">
+          <label for="repEntrada">Representação Entrada</label>
+          <select id="repEntrada">
+            <option value="unsigned">Unsigned</option>
+            <option value="twos" selected>2's Complement</option>
+            <option value="ones">1's Complement</option>
+            <option value="signmag">Sign-Magnitude</option>
+            <option value="excess">Excess-N</option>
+          </select>
+        </div>
+        <div class="mode-control" id="blocoRepSaida">
+          <label for="repSaida">Representação Saída</label>
+          <select id="repSaida">
+            <option value="unsigned">Unsigned</option>
+            <option value="twos" selected>2's Complement</option>
+            <option value="ones">1's Complement</option>
+            <option value="signmag">Sign-Magnitude</option>
+            <option value="excess">Excess-N</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row-controls" id="linhaBits">
+        <div class="bits-control">
+          <label for="presetBits">Número de Bits</label>
+          <select id="presetBits">
             <option value="8">8 bits</option>
             <option value="16" selected>16 bits</option>
             <option value="32">32 bits</option>
             <option value="64">64 bits</option>
             <option value="custom">Custom</option>
           </select>
-          <input id="bitsDecimal" type="number" min="1" max="1024" value="16" />
-        </div>
-
-        <div class="mode-control">
-          <label for="decimalMode"><strong>Tipo</strong></label>
-          <select id="decimalMode">
-            <option value="unsigned">Unsigned (sem sinal)</option>
-            <option value="signed" selected>Signed (2's complement)</option>
-          </select>
+          <input id="bits" type="number" min="1" max="1024" value="16" />
         </div>
       </div>
 
+      <label for="valorEntrada">Valor de Entrada</label>
+      <input id="valorEntrada" type="text" placeholder="Digite o valor" />
+
       <div class="buttons">
-        <button id="decToBinBtn">Converter →</button>
-        <button id="decCopyBtn" class="secondary">Copiar binário</button>
+        <button id="btnConverter">Converter →</button>
+        <button id="btnCopiar" class="secondary">Copiar</button>
+        <button id="btnLimpar" class="secondary">Limpar</button>
       </div>
 
       <div class="result">
-        <label>Binário (preenchido até bits):</label>
-        <pre id="resultadoDecimal" class="output">—</pre>
-      </div>
-    </section>
-
-    <!-- Binário -> Decimal -->
-    <section class="panel">
-      <h2>Binário → Decimal</h2>
-      <label>Binário (apenas 0/1)</label>
-      <input id="binarioInput" type="text" placeholder="Ex: 101100011" />
-
-      <div class="row-controls">
-        <div class="bits-control">
-          <label for="bitsBinario"><strong>Nº de bits</strong></label>
-          <select id="presetBitsBinario">
-            <option value="8">8 bits</option>
-            <option value="16" selected>16 bits</option>
-            <option value="32">32 bits</option>
-            <option value="64">64 bits</option>
-            <option value="custom">Custom</option>
-          </select>
-          <input id="bitsBinario" type="number" min="1" max="1024" value="16" />
-        </div>
-
-        <div class="mode-control">
-          <label for="binarioMode"><strong>Tipo</strong></label>
-          <select id="binarioMode">
-            <option value="unsigned">Unsigned (sem sinal)</option>
-            <option value="signed" selected>Signed (2's complement)</option>
-          </select>
-        </div>
+        <label>Resultado:</label>
+        <pre id="saida" class="output">—</pre>
       </div>
 
-      <div class="buttons">
-        <button id="binToDecBtn">Converter →</button>
-        <button id="binCopyBtn" class="secondary">Copiar decimal</button>
-      </div>
-
-      <div class="result">
-        <label>Decimal:</label>
-        <pre id="resultadoBinario" class="output">—</pre>
+      <div id="detalhesBox" class="result">
+        <label>Detalhes:</label>
+        <pre id="detalhes" class="output">—</pre>
       </div>
     </section>
 
     <footer class="footer">
-    	<p>Observações: usa <code>BigInt</code>. Limite de bits: <strong>1–1024</strong>. Navegadores modernos suportam BigInt.</p>
-		<p class="assinatura">Feito por <a href="https://github.com/hiagosantos60" target="_blank">Hiago Ritter Santos e auxilio de IA</a></p>
+      <p>Observações: usa <code>BigInt</code>. Limite de bits: 1–1024.</p>
+      <p class="assinatura">Feito por <a href="https://github.com/hiagosantos60" target="_blank">Hiago Ritter Santos</a></p>
     </footer>
   </main>
 
   <script src="script.js"></script>
 </body>
 </html>
-
