@@ -9,7 +9,6 @@
 body {
   background-color: #f5f6fa;
   color: #333;
-  line-height: 1.6;
   min-height: 100vh;
   display: flex;
   justify-content: center;
@@ -63,8 +62,7 @@ select {
   transition: border 0.2s;
 }
 
-input[type="text"]:focus,
-input[type="number"]:focus,
+input:focus,
 select:focus {
   border-color: #4cd137;
   outline: none;
@@ -81,15 +79,6 @@ select:focus {
   display: flex;
   flex-direction: column;
   flex: 1;
-}
-
-.bits-row input,
-.bits-control input {
-  flex: 1;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 16px;
 }
 
 .buttons {
@@ -150,24 +139,10 @@ button:active {
   font-size: 14px;
   color: #718093;
   margin-top: 30px;
-}
-
-.footer {
-  text-align: center;
-  font-size: 14px;
-  color: #718093;
-  margin-top: 30px;
   padding: 15px 10px;
   background-color: #f0f0f0;
   border-top: 2px solid #dcdde1;
   border-radius: 0 0 12px 12px;
-}
-
-.footer .assinatura {
-  font-weight: bold;
-  font-size: 16px;
-  color: #2a9d8f;
-  margin-top: 8px;
 }
 
 .footer .assinatura a {
